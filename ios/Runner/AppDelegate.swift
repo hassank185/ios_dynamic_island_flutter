@@ -26,14 +26,7 @@ import ActivityKit
                 } else {
                     result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
                 }
-            case "updateLiveActivity":
-                 if let args = call.arguments as? [String: Any],
-                   let remainingTime = args["remainingTime"] as? Int {
-                    self.updateActivity(remainingTime: remainingTime)
-                    result(nil)
-                } else {
-                    result(FlutterError(code: "INVALID_ARGUMENTS", message: "Invalid arguments", details: nil))
-                }
+           
             case "stopLiveActivity":
                 self.stopActivity()
                 result(nil)
@@ -61,12 +54,7 @@ import ActivityKit
         }
     }
 
-    func updateActivity(remainingTime: Int) {
-        let state = TimerAttributes.ContentState(remainingTime: remainingTime)
-        Task {
-            await liveActivity?.update(using: state)
-        }
-    }
+   
 
     func stopActivity() {
         let state = TimerAttributes.ContentState(remainingTime: 0)

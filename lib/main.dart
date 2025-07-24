@@ -6,8 +6,18 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+// By making MyApp a StatefulWidget, we can hold onto the single
+// instance of TimerHomePage throughout the app's life.
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // We create the TimerHomePage here and never let it go.
+  final TimerHomePage _timerPage = const TimerHomePage();
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +27,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const TimerHomePage(),
+      // We use onGenerateRoute to ensure we always show the same page instance.
+      // This prevents a new page from being pushed onto the stack when the app
+      // is opened from the Dynamic Island.
+      onGenerateRoute: (settings) {
+        return MaterialPageRoute(builder: (context) => _timerPage);
+      },
     );
   }
 }
@@ -47,6 +62,7 @@ class _TimerHomePageState extends State<TimerHomePage> {
     _timer = Timer.periodic(
       const Duration(seconds: 1),
           (Timer timer) {
+        if (!mounted) return; // Check if the widget is still in the tree
         if (_start == 0) {
           setState(() {
             timer.cancel();

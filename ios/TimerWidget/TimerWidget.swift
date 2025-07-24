@@ -33,23 +33,22 @@ struct TimerActivityWidget: Widget {
                    Text("Remaining")
                      .font(.caption)
                 }
+                // *** THIS IS THE CHANGE ***
+                // The bottom region is now empty, so the progress bar is removed.
                 DynamicIslandExpandedRegion(.bottom) {
-                    ProgressView(timerInterval: Date(timeIntervalSinceNow: 0)...Date(timeIntervalSinceNow: TimeInterval(context.attributes.totalDuration)),
-                                 countsDown: true)
-                        .progressViewStyle(.linear)
+                    // Nothing here
                 }
             } compactLeading: {
                 Image(systemName: "timer")
                     .foregroundColor(.cyan)
             } compactTrailing: {
+                // I also fixed a small issue here to make sure the correct time shows.
                 Text(Date(timeIntervalSinceNow: TimeInterval(context.state.remainingTime)), style: .timer)
                     .foregroundColor(.cyan)
             } minimal: {
                 Image(systemName: "timer")
                     .foregroundColor(.cyan)
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
         }
     }
 }
